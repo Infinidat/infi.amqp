@@ -1,25 +1,25 @@
 Overview
 ========
 
-*infi.amqp* is a simple AMQP client, based on `amqplib <http://pypi.python.org/pypi/amqplib/>`_. Its main features include::
+*infi.amqp* is a simple AMQP client, based on `amqplib <http://pypi.python.org/pypi/amqplib/>`_. Its main features include:
 
-  * Publishing messages.
-  * Consuming messages.
-  * Declaration and binding of exchanges and queues.
-  * Auto-reconnection, redeclaration and rebinding.
-  * AMQP publishing- and consuming-properties (more or less what amqplib features)
+* Publishing messages.
+* Consuming messages.
+* Declaration and binding of exchanges and queues.
+* Auto-reconnection, redeclaration and rebinding.
+* AMQP publishing- and consuming-properties (more or less what amqplib features)
 
 Basic Usage
 ===========
 
-Usage is very simple::
+Usage is very simple:
 
-  1. Create an AMQP instance.
-  2. Create exchanges and queues, and bind them if necessary.
-  3. Add exchanges and queues to AMQP.
-  4. Connect and start working.
+#. Create an AMQP instance.
+#. Create exchanges and queues, and bind them if necessary.
+#. Add exchanges and queues to AMQP.
+#. Connect and start working.
 
-Exchanges and queues are declared upon reconnection. If the connection is lost while publishing or consuming messages, AMQP attempts to reconnect, redeclare everything, and perform the operation again.
+Exchanges and queues are declared upon connection and reconnection. If the connection is lost while publishing or consuming messages, AMQP attempts to reconnect, redeclare everything, and perform the operation again.
 
 Example usage::
 
