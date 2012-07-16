@@ -138,9 +138,11 @@ class Queue(object):
         self._bindings.append(dict(exchange=exchange, routing_key=routing_key,
             nowait=nowait, arguments=arguments, ticket=ticket))
     def _declare_and_bind(self, channel):
+        logger.debug('Declaring queue: %r', self._declaration)
         response = channel.queue_declare(**self._declaration)
         self.name = response[0]
         for binding in self._bindings:
+            logger.debug('Binding queue: %r', binding)
             channel.queue_bind(queue=self.name, **binding)
 
 class Exchange(object):
@@ -149,6 +151,7 @@ class Exchange(object):
         self._declaration = dict(exchange=exchange, type=type, durable=durable, auto_delete=auto_delete,
                                  internal=internal, nowait=nowait, arguments=arguments, ticket=ticket)
     def _declare(self, channel):
+        logger.debug('Declaring exchange: %r', self._declaration)
         channel.exchange_declare(**self._declaration)
 
 
