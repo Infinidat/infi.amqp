@@ -3,6 +3,7 @@ from amqplib import client_0_8 as amqp
 import time
 import socket
 import errno
+import sys
 from functools import partial
 from logging import getLogger
 
@@ -108,6 +109,8 @@ class AMQP(object):
                     limit -= 1
         except AMQPInterrupted:
             pass
+        except MessageProcessingError as e:
+            logger.error(str(e))
         finally:
             self._consuming = False
     def stop_consuming(self):
@@ -115,7 +118,12 @@ class AMQP(object):
     def _consumer_callback(self, user_callback, message):
         tag = message.delivery_info['delivery_tag']
         logger.debug('Received message %r', tag)
-        should_ack = user_callback(message)
+        try:
+            should_ack = user_callback(message)
+        except:
+            e = sys.exc_info()[1]
+            logger.debug('Error during message processing: {}'.format(e), exc_info=True)
+            raise MessageProcessingError('Error during message processing: {}'.format(e))
         if should_ack:
             logger.debug('Acknowledging message %r', tag)
             self._invoke_channel('basic_ack', delivery_tag=tag)
@@ -169,5 +177,9 @@ def format_exception_message(e, template='{}'):
 
 ### EXCEPTIONS ###
 
-class AMQPInterrupted(Exception):
+class AMQPError(Exception):
+    pass
+class AMQPInterrupted(AMQPError):
+    pass
+class MessageProcessingError(AMQPError):
     pass
